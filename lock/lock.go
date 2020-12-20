@@ -34,21 +34,21 @@ var (
 	ErrLockLocked = fmt.Errorf("lock: lock is locked")
 )
 
-// New returns a new locker
-func New(path string) *locker {
-	return &locker{
+// New returns a new Locker
+func New(path string) *Locker {
+	return &Locker{
 		path: path,
 	}
 }
 
-type locker struct {
+type Locker struct {
 	path string
 	file *os.File
 }
 
 // todo:
 // Lock locks ...
-func (l *locker) Lock() error {
+func (l *Locker) Lock() error {
 	abs, err := filepath.Abs(l.path)
 	if err != nil {
 		return errors.Wrap(err, "absolute represenation of path failed")
@@ -89,7 +89,7 @@ func (l *locker) Lock() error {
 
 // todo:
 // TryLock ...
-func (l *locker) TryLock() error {
+func (l *Locker) TryLock() error {
 	abs, err := filepath.Abs(l.path)
 	if err != nil {
 		return errors.Wrap(err, "abs failed")
@@ -126,7 +126,7 @@ func (l *locker) TryLock() error {
 
 // todo:
 // Unlock ...
-func (l *locker) Unlock() error {
+func (l *Locker) Unlock() error {
 	// it's sufficient to simply close the file descriptor
 	if err := l.file.Close(); err != nil {
 		return errors.Wrap(err, "close failed")
