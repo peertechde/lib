@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	retry = 250 * time.Millisecond
+	defaultRetryInterval = 250 * time.Millisecond
 
 	// Open File Description Locks
 	//
@@ -35,15 +35,20 @@ var (
 )
 
 // New returns a new Locker
-func New(path string) *Locker {
+func New(path string, retryInterval time.Duration) *Locker {
+	if retryInterval == time.Duration(0) {
+		retryInterval = defaultRetryInterval
+	}
 	return &Locker{
-		path: path,
+		path:          path,
+		retryInterval: retryInterval,
 	}
 }
 
 type Locker struct {
-	path string
-	file *os.File
+	path          string
+	file          *os.File
+	retryInterval time.Duration
 }
 
 // todo:
@@ -79,7 +84,7 @@ func (l *Locker) Lock() error {
 			file.Close()
 			return errors.Wrap(err, "lock failed")
 		}
-		time.Sleep(retry)
+		time.Sleep(l.retryInterval)
 	}
 	l.path = abs
 	l.file = file

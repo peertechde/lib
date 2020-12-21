@@ -20,13 +20,13 @@ func TestLock(t *testing.T) {
 	}()
 
 	// lock file
-	lock := New(file.Name())
+	lock := New(file.Name(), 0)
 	if err := lock.Lock(); err != nil {
 		t.Fatal(err)
 	}
 
 	// try to lock a locked file
-	dupl := New(file.Name())
+	dupl := New(file.Name(), 0)
 	if err := dupl.TryLock(); err != ErrLockLocked {
 		t.Fatal(err)
 	}
@@ -42,7 +42,7 @@ func TestLock(t *testing.T) {
 	// block while `dupl` is locked
 	locked := make(chan bool, 1)
 	go func() {
-		blocker := New(file.Name())
+		blocker := New(file.Name(), 0)
 		if err := blocker.Lock(); err != nil {
 			t.Fatal(err)
 		}
