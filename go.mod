@@ -1,4 +1,4 @@
-module github.com/peertechorg/lib
+module github.com/peertechde/lib
 
 go 1.15
 
