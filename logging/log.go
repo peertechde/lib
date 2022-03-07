@@ -4,6 +4,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+const (
+	// Sys defines the field denoting the system when creating a new logger
+	Sys = "sys"
+
+	// Subsys defines the field denoting the subsystem when creating a new logger
+	Subsys = "subsys"
+)
+
 // Logger is the default base logger
 var Logger = defaultLogger()
 
